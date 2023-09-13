@@ -1,0 +1,33 @@
+cluster:
+  name: ops-001
+  server: https://kubernetes.default.svc
+
+sealedSecrets:
+  enable: true
+  project: default
+  namespace: sealed-secrets
+  source:
+    repoURL: https://bitnami-labs.github.io/sealed-secrets
+    targetRevision: 2.1.6
+
+clusterAutoscaler:
+  enable: true
+  project: default
+  namespace: kube-system
+  source:
+    repoURL: https://kubernetes.github.io/autoscaler
+    targetRevision: 9.19.2
+  parameters:
+    awsRegion: us-west-2
+
+monitoring:
+  enable: true
+  project: default
+  namespace: monitoring
+  source:
+    repoURL: git@github.com:k7gh/swish.git
+    targetRevision: HEAD
+    path: charts/monitoring
+    helm:
+      releaseName: ops-001-monitoring
+      valueFiles: values.ops-001.yaml

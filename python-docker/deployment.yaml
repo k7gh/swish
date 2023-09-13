@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  my-python
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      k8s-app: my-python
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        k8s-app: my-python
+    spec:
+      containers:
+      - name:  my-python
+        image: kedjah/python:v0.1
+        resources:
+          limits:
+            cpu: 30m
+            memory: 50Mi
+          requests:
+            cpu: 10m
+            memory: 10Mi
+        command: [ "/bin/bash", "-c", "--" ]
+        args: [ "while true; do sleep 30; done;" ]
+        ports:
+        - containerPort: 80
+          name: http
+        - containerPort: 443
+          name: https

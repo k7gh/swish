@@ -1,0 +1,65 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: ops-001
+  region: us-west-2
+  version: "1.24"
+  tags:
+    team: "devops"
+    role: "operations"
+
+addons:
+  - name: "aws-ebs-csi-driver"
+    version: "v1.6.1-eksbuild.1"
+
+nodeGroups:
+  - name: ops-001-ng-01
+    propagateASGTags: true
+    instanceType: t3.medium
+    amiFamily: AmazonLinux2
+    desiredCapacity: 2
+    labels:
+      role: web
+    minSize: 2
+    maxSize: 3
+    volumeSize: 100
+    maxPodsPerNode: 256
+    tags:
+      # EC2 tags required for cluster-autoscaler auto-discovery
+      k8s.io/cluster-autoscaler/enabled: "true"
+      k8s.io/cluster-autoscaler/ops-001: "owned"
+    iam:
+      attachPolicyARNs:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+        - arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess
+        - arn:aws:iam::009620189519:policy/eks-ops-ng-policy
+      withAddonPolicies:
+        ebs: true
+        autoScaler: true
+  - name: ops-001-ng-02
+    propagateASGTags: true
+    instanceType: t3.large
+    amiFamily: AmazonLinux2
+    desiredCapacity: 1
+    labels:
+      role: api
+    minSize: 1
+    maxSize: 3
+    volumeSize: 100
+    maxPodsPerNode: 256
+    tags:
+      # EC2 tags required for cluster-autoscaler auto-discovery
+      k8s.io/cluster-autoscaler/enabled: "true"
+      k8s.io/cluster-autoscaler/ops-001: "owned"
+    iam:
+      attachPolicyARNs:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+        - arn:aws:iam::aws:policy/ElasticLoadBalancingFullAccess
+        - arn:aws:iam::009620189519:policy/eks-ops-ng-policy
+      withAddonPolicies:
+        ebs: true
+        autoScaler: true

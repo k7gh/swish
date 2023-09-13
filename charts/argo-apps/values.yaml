@@ -1,0 +1,8 @@
+sealedSecrets:
+  enable: false
+
+clusterAutoscaler:
+  enabe: false
+
+monitoring:
+  enable: false

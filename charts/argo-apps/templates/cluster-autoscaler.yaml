@@ -1,0 +1,46 @@
+{{- if .Values.clusterAutoscaler.enable -}}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.cluster.name }}-clusterautoscaler
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  {{- with .Values.clusterAutoscaler.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  labels:
+    team: ops
+    cluster: {{ .Values.cluster.name }}
+spec:
+  project: {{ .Values.clusterAutoscaler.project }}
+  source:
+    repoURL: {{ .Values.clusterAutoscaler.source.repoURL }}
+    targetRevision: {{ .Values.clusterAutoscaler.source.targetRevision }}
+    chart: cluster-autoscaler
+    helm:
+      parameters:
+        - name: namespace
+          value: {{ .Values.clusterAutoscaler.namespace  }}
+        - name: autoDiscovery.clusterName
+          value: {{ .Values.cluster.name }}
+        - name: awsRegion
+          value: {{ .Values.clusterAutoscaler.parameters.awsRegion }}
+
+  destination:
+    {{ if .Values.cluster.server -}}
+    server: {{ .Values.cluster.server }}
+    {{ else }}
+    name: {{ .Values.cluster.name }}
+    {{ end -}}
+    namespace: {{ .Values.clusterAutoscaler.namespace  }}
+
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - Validate=true
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+{{- end }}
