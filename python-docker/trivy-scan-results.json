@@ -1,6 +1,6 @@
 {
   "SchemaVersion": 2,
-  "ArtifactName": "kedjah/python:v0.1",
+  "ArtifactName": "slimjayze/swish_project:v0.1",
   "ArtifactType": "container_image",
   "Metadata": {
     "OS": {
@@ -18,7 +18,7 @@
       "sha256:7bbb3573e48f4f837b1323c9d78b6fba4734c99a72dcb45c60ade16d554363ba"
     ],
     "RepoTags": [
-      "kedjah/python:v0.1"
+      "slimjayze/swish_project:v0.1"
     ],
     "ImageConfig": {
       "architecture": "amd64",
@@ -131,7 +131,7 @@
   },
   "Results": [
     {
-      "Target": "kedjah/python:v0.1 (ubuntu 20.04)",
+      "Target": "slimjayze/swish_project:v0.1 (ubuntu 20.04)",
       "Class": "os-pkgs",
       "Type": "ubuntu",
       "Vulnerabilities": [
