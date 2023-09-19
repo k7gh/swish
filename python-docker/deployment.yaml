@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name:  my-python
-        image: kedjah/python:v0.1
+        image: slimjayze/swish_project:v0.1
         resources:
           limits:
             cpu: 30m
